@@ -26,8 +26,8 @@ const Inference = () => {
         <div className='flex flex-col gap-2'>
           <label htmlFor="tech">Technology:</label>
           <select value={tech} onChange={(e) => setTech(e.target.value)} className='border p-2 rounded-md' id="tech">
-            <option value="react">React</option>
-            <option value="flask">Flask</option>
+            <option value="nodejs">Node.js</option>
+            <option value="python">Python</option>
           </select>
         </div>
         <button onClick={renderRepl} className='bg-blue-500 text-white p-2 rounded-md cursor-pointer'>Submit</button>

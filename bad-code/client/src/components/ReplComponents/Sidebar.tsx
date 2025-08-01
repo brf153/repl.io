@@ -1,6 +1,4 @@
-type Props = {}
-
-const Sidebar = (props: Props) => {
+const Sidebar = () => {
   return (
     <div className="flex flex-col gap-10 items-center h-full text-white">
         <div className="text-2xl font-bold mt-4">
