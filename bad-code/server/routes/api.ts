@@ -1,10 +1,9 @@
-import { Router, Request, Response } from 'express';
+import express from 'express';
+import { setupCode } from './aws.js';
 
-const router = Router();
+const router = express.Router();
 
-router.get('/', (req: Request, res: Response) => {
-  res.send('Hello from Express!');
-});
+router.post('/create-repl', setupCode);
 
 // Add more routes here
 

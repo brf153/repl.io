@@ -1,6 +1,6 @@
-import { Socket } from 'socket.io';
+import type { Socket } from "socket.io";
 
-export default function socketHandler(socket: Socket) {
+function socketHandler(socket: Socket) {
   console.log('A user connected:', socket.id);
 
   socket.on('disconnect', () => {
@@ -9,3 +9,5 @@ export default function socketHandler(socket: Socket) {
 
   // Add more socket events here
 }
+
+export default socketHandler;
