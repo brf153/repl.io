@@ -5,8 +5,9 @@ import { BUCKET_NAME } from '../env.js';
 
 const setupCode = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const { tech, replName } = req.body;
+    console.log("checking bucket name", BUCKET_NAME);
     if (!tech || !replName || !BUCKET_NAME) {
-        return res.status(400).json({ error: 'Technology, Repl Name, and Bucket Name are required' });
+        return res.status(400).json({ error: 'Technology, Repl Name, and Bucket Name are required', data: { tech, replName, bucketName: BUCKET_NAME } });
     }
 
     try {

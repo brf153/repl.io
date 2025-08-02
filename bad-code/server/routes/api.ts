@@ -1,5 +1,5 @@
 import express from 'express';
-import { setupCode } from './aws.js';
+import { setupCode } from '../controllers/aws.js';
 
 const router = express.Router();
 

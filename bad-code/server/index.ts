@@ -8,8 +8,14 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
+app.use(express.json());
+
 // Use Express routes
-app.use('/', apiRouter);
+app.use('/v1', apiRouter);
+
+app.get('/health', (req, res) => {
+    res.status(200).json({ status: 'OK' });
+});
 
 // Socket.IO connection
 io.on('connection', socketHandler);
