@@ -5,6 +5,12 @@ import { AWS_REGION } from '../env.js';
 
 const s3 = new S3Client({ region: AWS_REGION as string });
 
+/**
+ * Copies all objects from one S3 folder to another within the same bucket.
+ * @param {string} bucketName - The name of the S3 bucket.
+ * @param {string} sourcePrefix - The source folder prefix (e.g., 'source-folder/').
+ * @param {string} destinationPrefix - The destination folder prefix (e.g., 'destination-folder/').
+ */
 async function copyS3Folder(bucketName: string, sourcePrefix: string, destinationPrefix: string) {
   try {
     const listCommand = new ListObjectsV2Command({
