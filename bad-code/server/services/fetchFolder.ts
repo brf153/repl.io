@@ -1,7 +1,6 @@
 import {
   S3Client,
   ListObjectsV2Command,
-  CopyObjectCommand,
   GetObjectCommand,
 } from "@aws-sdk/client-s3";
 import { AWS_REGION } from "../env.js";

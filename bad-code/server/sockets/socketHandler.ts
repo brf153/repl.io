@@ -1,21 +1,83 @@
-import type { Socket } from "socket.io";
+import { Server, Socket } from "socket.io";
+import { spawn } from "node-pty";
+import { Server as HttpServer } from "http";
+import { fetchS3FolderContents } from "../services/fetchFolder.js";
+import path from "path";
+import { fetchDir, fetchFileContent, saveFile } from "../utils/utils.js";
+import { clearTerminal, createPty, writeTerminal } from "../services/terminalManager.js";
+import { saveToS3 } from "../services/saveS3.js";
 
-function socketHandler(socket: Socket) {
+function socketHandler(server: HttpServer) {
   try {
-    console.log('A user connected:', socket.id);
-
-    socket.on('disconnect', () => {
-      console.log('User disconnected:', socket.id);
+    const io = new Server(server, {
+        cors: {
+            // Should restrict this more!
+            origin: "*",
+            methods: ["GET", "POST"],
+        },
     });
 
-    // Add more socket events here
+   io.on("connection", async (socket) => {
+        // Auth checks should happen here
+        const replId = socket.handshake.query.roomId as string;
 
-    socket.on('error', (err) => {
-      console.error(`Socket error on ${socket.id}:`, err);
+        if (!replId) {
+            socket.disconnect();
+            clearTerminal(socket.id);
+            return;
+        }
+
+        await fetchS3FolderContents(`code/${replId}`, path.join(__dirname, `../tmp/${replId}`));
+        socket.emit("loaded", {
+            rootContent: await fetchDir(path.join(__dirname, `../tmp/${replId}`), "")
+        });
+
+        initHandlers(socket, replId);
     });
   } catch (err) {
-    console.error(`Error in socketHandler for ${socket.id}:`, err);
+    console.error(`Error in socketHandler:`, err);
   }
+}
+
+function initHandlers(socket: Socket, replId: string) {
+
+    socket.on("disconnect", () => {
+        console.log("user disconnected");
+    });
+
+    socket.on("fetchDir", async (dir: string, callback) => {
+        const dirPath = path.join(__dirname, `../tmp/${replId}/${dir}`);
+        const contents = await fetchDir(dirPath, dir);
+        callback(contents);
+    });
+
+    socket.on("fetchContent", async ({ path: filePath }: { path: string }, callback) => {
+        const fullPath = path.join(__dirname, `../tmp/${replId}/${filePath}`);
+        const data = await fetchFileContent(fullPath);
+        callback(data);
+    });
+
+    // TODO: contents should be diff, not full file
+    // Should be validated for size
+    // Should be throttled before updating S3 (or use an S3 mount)
+    socket.on("updateContent", async ({ path: filePath, content }: { path: string, content: string }) => {
+        const fullPath = path.join(__dirname, `../tmp/${replId}/${filePath}`);
+        await saveFile(fullPath, content);
+        await saveToS3(`code/${replId}`, filePath, content);
+    });
+
+    socket.on("requestTerminal", async () => {
+        createPty(socket.id, replId, (data, id) => {
+            socket.emit('terminal', {
+                data: Buffer.from(data,"utf-8")
+            });
+        });
+    });
+    
+    socket.on("terminalData", async ({ data }: { data: string, terminalId: number }) => {
+        writeTerminal(socket.id, data);
+    });
+
 }
 
 export default socketHandler;
