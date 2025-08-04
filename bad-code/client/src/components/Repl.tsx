@@ -25,6 +25,7 @@ const Repl = () => {
     }, [socket]);
 
     const onSelect = (file: File) => {
+      console.log("checking file", file)
         if (file.type === Type.DIRECTORY) {
             socket?.emit("fetchDir", file.path, (data: RemoteFile[]) => {
                 setFileStructure(prev => {
@@ -50,7 +51,7 @@ const Repl = () => {
   return (
     <div className='w-screen h-screen flex flex-row justify-between bg-black text-white'>
       <div className='w-[10%]'><Sidebar socket={socket} selectedFile={selectedFile} onSelect={onSelect} files={fileStructure} /></div>
-      <div className='bg-[#1e1e1e] w-[55%]'><CodeEditor socket={socket} /></div>
+      <div className='bg-[#1e1e1e] w-[55%]'><CodeEditor socket={socket} file={selectedFile} /></div>
       <div className='w-[35%]'><TerminalComponent socket={socket} /></div>
     </div>
   )

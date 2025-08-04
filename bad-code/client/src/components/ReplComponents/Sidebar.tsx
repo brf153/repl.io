@@ -17,7 +17,7 @@ const Sidebar = (props: Props) => {
             {props.files.map((file: File, index: number) => (
               <div
                 key={index}
-                className={`w-full py-1 pl-4 ${props.selectedFile?.id === file.id ? 'bg-gray-700' : ''}`}
+                className={`w-full py-1 pl-4 cursor-pointer ${props.selectedFile?.name === file.name ? 'bg-gray-700' : ''}`}
                 onClick={() => props.onSelect(file)}
               >
                 {file.name}
