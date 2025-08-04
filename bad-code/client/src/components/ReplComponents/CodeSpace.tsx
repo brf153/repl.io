@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import Editor from "@monaco-editor/react";
 import useDebounce from "lodash.debounce";
 import type { File } from "../../types/FileType";
+import { Socket } from "socket.io-client";
 
 type Props = {
-  socket: any; // Replace with actual socket type if available
-  file: File | undefined; // Add file prop
+  socket: typeof Socket | null;
+  file: File | undefined;
 };
 
 const languageRender = (fileName: string | undefined) => {

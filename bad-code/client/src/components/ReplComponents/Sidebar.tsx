@@ -1,9 +1,10 @@
 import type { File } from "../../types/FileType";
+import { Socket } from "socket.io-client";
 
 type Props = {
-  socket: any,
-  selectedFile: any,
-  onSelect: any,
+  socket: typeof Socket | null,
+  selectedFile: File | undefined,
+  onSelect: (file: File) => void,
   files: any
 };
 

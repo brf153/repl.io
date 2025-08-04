@@ -1,11 +1,14 @@
 import { spawn } from "node-pty";
 import type { IPty } from "node-pty";
+import path from "path";
 
 interface TerminalMap {
     [socketId: string]: IPty;
 }
 
 const terminals: TerminalMap = {};
+
+const __dirname = path.resolve(path.dirname(''));
 
 function createPty(socketId: string, replId: string, onData: (data: string, id: string) => void) {
     // You can customize shell and cwd as needed
@@ -14,7 +17,7 @@ function createPty(socketId: string, replId: string, onData: (data: string, id: 
         name: "xterm-color",
         cols: 80,
         rows: 30,
-        cwd: process.cwd(),
+        cwd: path.join(__dirname, `../tmp/${replId}`),
         env: process.env,
     });
 

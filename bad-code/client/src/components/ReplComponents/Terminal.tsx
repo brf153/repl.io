@@ -1,11 +1,18 @@
 import { useEffect, useRef } from "react";
 import { Terminal as XTerm } from "@xterm/xterm";
 import "@xterm/xterm/css/xterm.css";
+import { FitAddon } from "xterm-addon-fit";
+import { Socket } from "socket.io-client";
+const fitAddon = new FitAddon();
 
 const PROMPT = "Bash $ ";
 
 type Props = {
-  socket: any; // Replace with actual socket type if available
+  socket: typeof Socket | null;
+};
+
+function ab2str(buf: ArrayBuffer) {
+  return String.fromCharCode(...new Uint8Array(buf));
 }
 
 const TerminalComponent = ({ socket }: Props) => {
@@ -29,7 +36,9 @@ const TerminalComponent = ({ socket }: Props) => {
 
     // Simulate output
     if (cmd === "help") {
-      xtermRef.current?.writeln("\r\nAvailable commands: help, echo [text], clear");
+      xtermRef.current?.writeln(
+        "\r\nAvailable commands: help, echo [text], clear"
+      );
     } else if (cmd.startsWith("echo ")) {
       const output = cmd.slice(5);
       xtermRef.current?.writeln("\r\n" + output);
@@ -41,17 +50,30 @@ const TerminalComponent = ({ socket }: Props) => {
   };
 
   useEffect(() => {
+    if (!socket) return;
     const term = new XTerm({
       cursorBlink: true,
       fontSize: 14,
     });
 
     xtermRef.current = term;
+    term.loadAddon(fitAddon);
+    fitAddon.fit();
+    socket.emit("requestTerminal");
+    socket.on("terminal", terminalHandler);
 
     if (terminalRef.current) {
       term.open(terminalRef.current);
       term.write("Welcome to the terminal!\r\n");
       prompt();
+    }
+
+    function terminalHandler({ data }: { data: ArrayBuffer }) {
+      if (data instanceof ArrayBuffer) {
+        console.error(data);
+        console.log(ab2str(data));
+        term.write(ab2str(data));
+      }
     }
 
     term.onKey(({ key, domEvent }) => {
@@ -75,7 +97,10 @@ const TerminalComponent = ({ socket }: Props) => {
 
         case "ArrowUp": {
           const history = historyRef.current;
-          if (history.length > 0 && historyIndexRef.current < history.length - 1) {
+          if (
+            history.length > 0 &&
+            historyIndexRef.current < history.length - 1
+          ) {
             historyIndexRef.current++;
             const prevCommand = history[historyIndexRef.current];
 
@@ -124,7 +149,7 @@ const TerminalComponent = ({ socket }: Props) => {
   return (
     <div
       ref={terminalRef}
-      style={{ width: "100%", height: "100%", overflow: "hidden", }}
+      style={{ width: "100%", height: "100%", overflow: "hidden" }}
     />
   );
 };
