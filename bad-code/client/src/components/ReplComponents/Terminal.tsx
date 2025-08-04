@@ -5,7 +5,11 @@ import "@xterm/xterm/css/xterm.css";
 
 const PROMPT = "Bash $ ";
 
-const TerminalComponent = () => {
+type Props = {
+  socket: any; // Replace with actual socket type if available
+}
+
+const TerminalComponent = ({ socket }: Props) => {
   const terminalRef = useRef<HTMLDivElement>(null);
   const xtermRef = useRef<XTerm | null>(null);
   const commandBufferRef = useRef("");

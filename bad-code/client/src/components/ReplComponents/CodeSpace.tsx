@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import Editor from '@monaco-editor/react';
 
-const CodeEditor: React.FC = () => {
+type Props = {
+  socket: any; // Replace with actual socket type if available
+}
+
+const CodeEditor: React.FC<Props> = ({ socket }: Props) => {
   const [code, setCode] = useState('// Write your code here');
 
   return (

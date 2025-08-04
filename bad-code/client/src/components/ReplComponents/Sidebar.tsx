@@ -1,4 +1,11 @@
-const Sidebar = () => {
+type Props = {
+  socket: any,
+  selectedFile: any,
+  onSelect: any,
+  files: any
+};
+
+const Sidebar = (props: Props) => {
   return (
     <div className="flex flex-col gap-10 items-center h-full text-white">
         <div className="text-2xl font-bold mt-4">
