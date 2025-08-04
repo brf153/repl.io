@@ -7,6 +7,8 @@ import { fetchDir, fetchFileContent, saveFile } from "../utils/utils.js";
 import { clearTerminal, createPty, writeTerminal } from "../services/terminalManager.js";
 import { saveToS3 } from "../services/saveS3.js";
 
+const __dirname = path.resolve(path.dirname(''));
+
 function socketHandler(server: HttpServer) {
   try {
     const io = new Server(server, {

@@ -4,7 +4,7 @@ import axiosInstance from "../utils/axios";
 
 const Inference = () => {
   const [replId, setReplId] = React.useState<string>("");
-  const [tech, setTech] = React.useState<string>("react");
+  const [tech, setTech] = React.useState<string>("node-js");
   const router = useNavigate();
   const renderRepl = async () => {
     // Logic to render the REPL based on inference ID
@@ -21,7 +21,7 @@ const Inference = () => {
       console.log("Inference response:", response.data);
       if (response.data.success) {
         // Navigate to the REPL page with the inference ID
-        router(`/repl/${inferenceId}`);
+        router(`/code/${inferenceId}`);
       }
     } catch (error) {
       console.error("Error during inference:", error);
@@ -52,7 +52,7 @@ const Inference = () => {
             className="border p-2 rounded-md"
             id="tech"
           >
-            <option value="nodejs">Node.js</option>
+            <option value="node-js">Node.js</option>
             <option value="python">Python</option>
           </select>
         </div>

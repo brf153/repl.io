@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 import { Terminal as XTerm } from "@xterm/xterm";
-import { FitAddon } from "xterm-addon-fit";
 import "@xterm/xterm/css/xterm.css";
 
 const PROMPT = "Bash $ ";
@@ -15,7 +14,6 @@ const TerminalComponent = ({ socket }: Props) => {
   const commandBufferRef = useRef("");
   const historyRef = useRef<string[]>([]);
   const historyIndexRef = useRef<number>(-1);
-  const fitAddonRef = useRef<FitAddon | null>(null);
 
   const prompt = () => {
     xtermRef.current?.write(`\r\n${PROMPT}`);
@@ -48,23 +46,13 @@ const TerminalComponent = ({ socket }: Props) => {
       fontSize: 14,
     });
 
-    const fitAddon = new FitAddon();
-    fitAddonRef.current = fitAddon;
-    term.loadAddon(fitAddon);
-
     xtermRef.current = term;
 
     if (terminalRef.current) {
       term.open(terminalRef.current);
-      fitAddon.fit();
       term.write("Welcome to the terminal!\r\n");
       prompt();
     }
-
-    const handleResize = () => {
-      fitAddonRef.current?.fit();
-    };
-    window.addEventListener("resize", handleResize);
 
     term.onKey(({ key, domEvent }) => {
       const char = key;
@@ -128,7 +116,6 @@ const TerminalComponent = ({ socket }: Props) => {
     });
 
     return () => {
-      window.removeEventListener("resize", handleResize);
       xtermRef.current?.dispose();
       xtermRef.current = null;
     };

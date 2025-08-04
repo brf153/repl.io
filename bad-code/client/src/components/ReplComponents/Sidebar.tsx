@@ -1,3 +1,5 @@
+import type { File } from "../../types/FileType";
+
 type Props = {
   socket: any,
   selectedFile: any,
@@ -12,15 +14,15 @@ const Sidebar = (props: Props) => {
             Repl.io
         </div>
         <div className="flex flex-col text-left w-full">
-            <div className="w-full bg-gray-800 py-1 pl-4">
-                main.py
-            </div>
-            <div className="w-full py-1 pl-4">
-                requirements.txt
-            </div>
-            <div className="w-full py-1 pl-4">
-                README.md
-            </div>
+            {props.files.map((file: File, index: number) => (
+              <div
+                key={index}
+                className={`w-full py-1 pl-4 ${props.selectedFile?.id === file.id ? 'bg-gray-700' : ''}`}
+                onClick={() => props.onSelect(file)}
+              >
+                {file.name}
+              </div>
+            ))}
         </div>
     </div>
   )

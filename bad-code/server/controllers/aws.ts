@@ -17,10 +17,10 @@ const setupCode = async (req: express.Request, res: express.Response, next: expr
 
         // Respond to the client
         console.log('Copy initiated successfully');
-        res.status(200).json({ message: 'Copy initiated' });
+        res.status(200).json({ message: 'Copy initiated', success: true });
     } catch (error) {
         console.error('Error copying S3 folder:', error);
-        res.status(500).json({ error: 'Failed to copy S3 folder', details: (error as Error).message });
+        res.status(500).json({ error: 'Failed to copy S3 folder', details: (error as Error).message, success: false });
     }
 };
 

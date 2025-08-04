@@ -15,7 +15,9 @@ const Repl = () => {
 
   useEffect(() => {
         if (socket) {
+          console.log("Socket connected:", socket);
             socket.on('loaded', ({ rootContent }: { rootContent: RemoteFile[]}) => {
+              console.log("Root content loaded:", rootContent);
                 setLoaded(true);
                 setFileStructure(rootContent);
             });
