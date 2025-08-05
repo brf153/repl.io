@@ -2,11 +2,10 @@ import React, { useState } from "react";
 import styled from "@emotion/styled";
 import { getIcon } from "./icon";
 import {
-  sortDir,
-  sortFile,
   type Directory,
   type File,
-} from "../../../types/FileType";
+} from "../../../types/types";
+import { sortDir, sortFile } from "../../../utils/FileTree";
 
 interface FileTreeProps {
   rootDir: Directory; // 根目录

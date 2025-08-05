@@ -3,9 +3,10 @@ import { useParams } from "react-router-dom";
 import TerminalComponent from "./ReplComponents/Terminal";
 import CodeEditor from "./ReplComponents/CodeSpace";
 import useSocket from "../utils/socket";
-import { buildFileTree, Type, type File } from "../types/FileType";
+import { Type, type File } from "../types/types";
 import Sidebar from "./ReplComponents/sidebar/sidebar";
 import { FileTree } from "./ReplComponents/sidebar/file-tree";
+import { buildFileTree } from "../utils/FileTree";
 
 const Repl = () => {
   const { replId } = useParams<{ replId: string }>();

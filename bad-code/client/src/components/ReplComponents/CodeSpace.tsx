@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Editor from "@monaco-editor/react";
 import debounce from "lodash.debounce";
-import type { File } from "../../types/FileType";
+import type { File } from "../../types/types";
 import { Socket } from "socket.io-client";
 import { DiffMatchPatch } from 'diff-match-patch-typescript';
 
