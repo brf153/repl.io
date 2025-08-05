@@ -44,7 +44,9 @@ function socketHandler(server: HttpServer) {
       socket.emit("loaded", {
         rootContent: await fetchDir(
           path.join(__dirname, `../tmp/${replId}`),
-          ""
+          "",
+          undefined,
+          0
         ),
       });
 
@@ -62,7 +64,7 @@ function initHandlers(socket: Socket, replId: string) {
 
   socket.on("fetchDir", async (dir: string, callback) => {
     const dirPath = path.join(__dirname, `../tmp/${replId}/${dir}`);
-    const contents = await fetchDir(dirPath, dir);
+    const contents = await fetchDir(dirPath, dir, undefined, 0);
     callback(contents);
   });
 

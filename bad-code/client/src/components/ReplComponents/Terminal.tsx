@@ -62,7 +62,6 @@ const TerminalComponent = ({ socket }: Props) => {
 
     function terminalHandler({ data }: { data: ArrayBuffer }) {
       if (data instanceof ArrayBuffer) {
-        console.log(ab2str(data));
         term.write(ab2str(data));
       }
     }
