@@ -5,7 +5,7 @@ import { FitAddon } from "xterm-addon-fit";
 import { Socket } from "socket.io-client";
 const fitAddon = new FitAddon();
 
-const PROMPT = "Bash $ ";
+const PROMPT = "> ";
 
 type Props = {
   socket: typeof Socket | null;
@@ -74,6 +74,7 @@ const TerminalComponent = ({ socket }: Props) => {
         case "Enter":
           term.write("\r\n");
           handleCommand(buffer, socket);
+          prompt();
           commandBufferRef.current = ""; // Clear the command buffer
           historyIndexRef.current = -1; // Reset history index
           break;
