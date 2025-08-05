@@ -12,7 +12,7 @@ const __dirname = path.resolve(path.dirname(''));
 
 function createPty(socketId: string, replId: string, onData: (data: string, id: string) => void) {
     // You can customize shell and cwd as needed
-    const shell = process.platform === "win32" ? "powershell.exe" : "bash";
+    const shell = process.platform === "win32" ? "cmd.exe" : "bash";
     const pty = spawn(shell, [], {
         name: "xterm-color",
         cols: 80,

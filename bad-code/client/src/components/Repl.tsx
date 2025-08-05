@@ -52,7 +52,7 @@ const Repl = () => {
     <div className='w-screen h-screen flex flex-row justify-between bg-black text-white'>
       <div className='w-[10%]'><Sidebar socket={socket} selectedFile={selectedFile} onSelect={onSelect} files={fileStructure} /></div>
       <div className='bg-[#1e1e1e] w-[55%]'><CodeEditor socket={socket} file={selectedFile} /></div>
-      <div className='w-[35%]'><TerminalComponent socket={socket} /></div>
+      <div className='w-auto'><TerminalComponent socket={socket} /></div>
     </div>
   )
 }

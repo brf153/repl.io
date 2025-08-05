@@ -27,26 +27,16 @@ const TerminalComponent = ({ socket }: Props) => {
     commandBufferRef.current = "";
   };
 
-  const handleCommand = (cmd: string) => {
+  const handleCommand = (cmd: string, socket: typeof Socket) => {
     if (!cmd.trim()) return;
 
     // Save to history
     historyRef.current.unshift(cmd);
     historyIndexRef.current = -1;
 
-    // Simulate output
-    if (cmd === "help") {
-      xtermRef.current?.writeln(
-        "\r\nAvailable commands: help, echo [text], clear"
-      );
-    } else if (cmd.startsWith("echo ")) {
-      const output = cmd.slice(5);
-      xtermRef.current?.writeln("\r\n" + output);
-    } else if (cmd === "clear") {
-      xtermRef.current?.clear();
-    } else {
-      xtermRef.current?.writeln(`\r\nCommand not found: ${cmd}`);
-    }
+    socket.emit("terminalData", {
+      data: cmd + "\r\n",
+    });
   };
 
   useEffect(() => {
@@ -58,19 +48,20 @@ const TerminalComponent = ({ socket }: Props) => {
 
     xtermRef.current = term;
     term.loadAddon(fitAddon);
-    fitAddon.fit();
     socket.emit("requestTerminal");
     socket.on("terminal", terminalHandler);
+    const handleResize = () => fitAddon.fit();
 
     if (terminalRef.current) {
       term.open(terminalRef.current);
+      fitAddon.fit();
       term.write("Welcome to the terminal!\r\n");
       prompt();
+      window.addEventListener("resize", handleResize);
     }
 
     function terminalHandler({ data }: { data: ArrayBuffer }) {
       if (data instanceof ArrayBuffer) {
-        console.error(data);
         console.log(ab2str(data));
         term.write(ab2str(data));
       }
@@ -83,8 +74,9 @@ const TerminalComponent = ({ socket }: Props) => {
       switch (domEvent.key) {
         case "Enter":
           term.write("\r\n");
-          handleCommand(buffer);
-          prompt();
+          handleCommand(buffer, socket);
+          commandBufferRef.current = ""; // Clear the command buffer
+          historyIndexRef.current = -1; // Reset history index
           break;
 
         case "Backspace":
@@ -143,6 +135,7 @@ const TerminalComponent = ({ socket }: Props) => {
     return () => {
       xtermRef.current?.dispose();
       xtermRef.current = null;
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 

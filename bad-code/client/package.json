@@ -15,6 +15,7 @@
     "@types/lodash.debounce": "^4.0.9",
     "@xterm/xterm": "^5.5.0",
     "axios": "^1.11.0",
+    "diff-match-patch-typescript": "^1.1.0",
     "lodash.debounce": "^4.0.8",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
