@@ -1,69 +1,92 @@
-# React + TypeScript + Vite
+# Repl.io Client
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the frontend client for the Repl.io project, built with **React**, **TypeScript**, and **Vite**. It provides a web-based code editor and terminal interface, similar to an online IDE.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **React**: UI library for building interactive interfaces.
+- **TypeScript**: Type-safe JavaScript for maintainable code.
+- **Vite**: Fast development server and build tool.
+- **TailwindCSS**: Utility-first CSS framework for styling.
+- **Monaco Editor**: Code editor component (used in VS Code).
+- **Xterm.js**: Terminal emulator for the browser.
+- **Socket.IO Client**: Real-time communication with the backend.
+- **Axios**: HTTP client for API requests.
+- **Emotion**: CSS-in-JS for styled components.
+- **React Router**: Routing for SPA navigation.
 
-## Expanding the ESLint configuration
+## Folder Structure
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- `src/`
+  - `App.tsx`: Main app component, sets up routes.
+  - `main.tsx`: Entry point, renders the app.
+  - `index.css`: Global styles, includes TailwindCSS.
+  - `components/`: UI components.
+    - `Inference.tsx`: Form to create/select a REPL environment.
+    - `Repl.tsx`: Main REPL interface (editor, file tree, terminal).
+    - `NotFound.tsx`: 404 page.
+    - `ReplComponents/`: Editor, terminal, sidebar, file tree, icons.
+  - `types/types.ts`: Type definitions for files and directories.
+  - `utils/`: Utility functions.
+    - `axios.ts`: Configured Axios instance for API calls.
+    - `socket.ts`: Custom React hook for Socket.IO connection.
+    - `fileTree.ts`: Functions to build and manage file tree structure.
+  - `assets/`: Static assets (e.g., SVGs).
+- `.env`: Environment variables for API and WebSocket URLs.
+- `vite.config.ts`: Vite configuration (React + TailwindCSS plugins).
+- `tsconfig.*.json`: TypeScript configuration files.
+- `eslint.config.js`: ESLint configuration for code linting.
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Main Features
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+### 1. Inference Page
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- Users enter an "Inference ID" and select a technology (Node.js or Python).
+- On submit, a POST request is sent to the backend (`/create-repl`) to set up the REPL environment.
+- On success, navigates to the REPL interface.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 2. REPL Interface
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- **Sidebar**: Displays a file tree, built from the backend's file structure. Users can navigate directories and select files.
+- **Code Editor**: Monaco Editor for editing code. Changes are sent to the backend via Socket.IO using diff-match-patch for efficient updates.
+- **Terminal**: Xterm.js-based terminal, connected to a backend shell via Socket.IO. Supports command history and basic shell interaction.
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### 3. Real-Time Collaboration
+
+- Uses Socket.IO for real-time updates between client and server.
+- File changes and terminal commands are synchronized instantly.
+
+### 4. API & WebSocket Configuration
+
+- API base URL and WebSocket URL are set via `.env` file:
+  ```
+  VITE_API_URL=http://localhost:4000/v1
+  VITE_WS_URL=http://localhost:4000/
+  ```
+
+## Development
+
+- **Start Dev Server**:  
+  ```sh
+  npm run dev
+  ```
+- **Build for Production**:  
+  ```sh
+  npm run build
+  ```
+- **Lint Code**:  
+  ```sh
+  npm run lint
+  ```
+
+## Notes
+
+- This client is designed for learning and experimentation. It does not implement user authentication or environment isolation.
+- The backend must be running and accessible at the URLs specified in `.env`.
+
+## References
+
+- [Monaco Editor](https://github.com/microsoft/monaco-editor)
+- [Xterm.js](https://github.com/xtermjs/xterm.js)
+- [Socket.IO](https://socket.io/)
+- [TailwindCSS](https://tailwindcss.com/)
